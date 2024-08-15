@@ -1,0 +1,242 @@
+// Pacote model
+class Usuario {
+    private String nome;
+    private String email;
+    private String senha;
+
+    public Usuario(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+
+    // Getters e Setters
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+}
+
+class Cliente {
+    private String nome;
+    private String cpf;
+    private String endereco;
+
+    public Cliente(String nome, String cpf, String endereco) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.endereco = endereco;
+    }
+
+    // Getters e Setters
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "nome='" + nome + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", endereco='" + endereco + '\'' +
+                '}';
+    }
+}
+
+// Pacote repository
+import java.util.ArrayList;
+import java.util.List;
+
+class UsuarioRepository {
+    private List<Usuario> usuarios = new ArrayList<>();
+
+    public void adicionarUsuario(Usuario usuario) {
+        usuarios.add(usuario);
+    }
+
+    public List<Usuario> listarUsuarios() {
+        return usuarios;
+    }
+
+    public Usuario buscarUsuarioPorEmail(String email) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getEmail().equals(email)) {
+                return usuario;
+            }
+        }
+        return null;
+    }
+}
+
+class ClienteRepository {
+    private List<Cliente> clientes = new ArrayList<>();
+
+    public void adicionarCliente(Cliente cliente) {
+        clientes.add(cliente);
+    }
+
+    public List<Cliente> listarClientes() {
+        return clientes;
+    }
+
+    public Cliente buscarClientePorCpf(String cpf) {
+        for (Cliente cliente : clientes) {
+            if (cliente.getCpf().equals(cpf)) {
+                return cliente;
+            }
+        }
+        return null;
+    }
+}
+
+// Pacote controller
+class UsuarioController {
+    private UsuarioRepository usuarioRepository = new UsuarioRepository();
+
+    public void registrarUsuario(String nome, String email, String senha) {
+        Usuario usuario = new Usuario(nome, email, senha);
+        usuarioRepository.adicionarUsuario(usuario);
+    }
+
+    public Usuario buscarUsuarioPorEmail(String email) {
+        return usuarioRepository.buscarUsuarioPorEmail(email);
+    }
+
+    public void listarUsuarios() {
+        for (Usuario usuario : usuarioRepository.listarUsuarios()) {
+            System.out.println(usuario);
+        }
+    }
+}
+
+class ClienteController {
+    private ClienteRepository clienteRepository = new ClienteRepository();
+
+    public void registrarCliente(String nome, String cpf, String endereco) {
+        Cliente cliente = new Cliente(nome, cpf, endereco);
+        clienteRepository.adicionarCliente(cliente);
+    }
+
+    public Cliente buscarClientePorCpf(String cpf) {
+        return clienteRepository.buscarClientePorCpf(cpf);
+    }
+
+    public void listarClientes() {
+        for (Cliente cliente : clienteRepository.listarClientes()) {
+            System.out.println(cliente);
+        }
+    }
+}
+
+// Pacote view
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        UsuarioController usuarioController = new UsuarioController();
+        ClienteController clienteController = new ClienteController();
+        Scanner scanner = new Scanner(System.in);
+        
+        while (true) {
+            System.out.println("1. Registrar Usuário");
+            System.out.println("2. Registrar Cliente");
+            System.out.println("3. Listar Usuários");
+            System.out.println("4. Listar Clientes");
+            System.out.println("5. Buscar Usuário por Email");
+            System.out.println("6. Buscar Cliente por CPF");
+            System.out.println("7. Sair");
+            System.out.print("Escolha uma opção: ");
+            int opcao = scanner.nextInt();
+            scanner.nextLine();  // Consumir nova linha
+
+            switch (opcao) {
+                case 1:
+                    System.out.print("Nome: ");
+                    String nomeUsuario = scanner.nextLine();
+                    System.out.print("Email: ");
+                    String email = scanner.nextLine();
+                    System.out.print("Senha: ");
+                    String senha = scanner.nextLine();
+                    usuarioController.registrarUsuario(nomeUsuario, email, senha);
+                    break;
+                case 2:
+                    System.out.print("Nome: ");
+                    String nomeCliente = scanner.nextLine();
+                    System.out.print("CPF: ");
+                    String cpf = scanner.nextLine();
+                    System.out.print("Endereço: ");
+                    String endereco = scanner.nextLine();
+                    clienteController.registrarCliente(nomeCliente, cpf, endereco);
+                    break;
+                case 3:
+                    usuarioController.listarUsuarios();
+                    break;
+                case 4:
+                    clienteController.listarClientes();
+                    break;
+                case 5:
+                    System.out.print("Email: ");
+                    String emailBusca = scanner.nextLine();
+                    System.out.println(usuarioController.buscarUsuarioPorEmail(emailBusca));
+                    break;
+                case 6:
+                    System.out.print("CPF: ");
+                    String cpfBusca = scanner.nextLine();
+                    System.out.println(clienteController.buscarClientePorCpf(cpfBusca));
+                    break;
+                case 7:
+                    System.out.println("Saindo...");
+                    return;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        }
+    }
+}
